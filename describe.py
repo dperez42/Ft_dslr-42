@@ -9,9 +9,14 @@ def main():
         exit(1)
     load_data = data_analysis(sys.argv[1])
     load_data.describe()
-    #load_data.describe(False)
-    print(load_data.get_feature_list())
-    print(load_data.get_columns_type())
+    
+      
+    text_col, num_col = load_data.count_type_columns()
+    print(f"Columnas Texto: {text_col}, Numéricas: {num_col}")
+    
+    df = load_data.get_dataframe()
+    print("Data example of numerical columns:")
+    print(df[0:2])
     exit()
 if __name__=="__main__":
     main()

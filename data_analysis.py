@@ -9,6 +9,7 @@ import  matplotlib.pyplot as plt
 from pathlib import Path
 from array import array
 import math
+import pandas as pd
 
 class data_analysis:
 
@@ -74,7 +75,9 @@ class data_analysis:
                         #sys.exit("Error: ")
             self.data.append(rowlist)
             i = i + 1
-        print() 
+        #print(self.data[1]) 
+        #print(len(self.data))
+        print("Read ", num_filas, " rows from ", self.filename)
     
     def clean_nan_data(self):
         #print(self.data[1])
@@ -107,6 +110,8 @@ class data_analysis:
             i = i+1
         self.data = clean_data
         #print(self.data)
+        #print(self.data[1]) 
+        print("Cleaned ",num_filas-len(self.data), " of ", num_filas, " rows. Total remain: ", len(self.data))
 
     def set_column_type(self):
         num_columnas = len(self.data_raw[0])
@@ -269,7 +274,7 @@ class data_analysis:
             i = i + 1
         print()
         return()
-
+    # Custom count function
     def count(self,values,type) -> float:
         nb = len(values)
         count = 1.0
@@ -285,7 +290,7 @@ class data_analysis:
                     count = count +1
             i = i + 1
         return int(count)
-
+    # Custom mean function
     def mean(self,values, type) -> float:
         if type==0:
             return float("nan")
@@ -304,7 +309,7 @@ class data_analysis:
         if n == 1:
             return float("nan")
         return (sum) / n
-    # std
+    # Custom stnard deviation function
     def std(self,values, type) -> float:
         if type==0:
             return float("nan")
@@ -327,7 +332,7 @@ class data_analysis:
             return float("nan")
         #print("std:", sum_of_squares, n, i)
         return math.sqrt(sum_of_squares / n)
-
+    # Custom min function
     def values_min(self,values, type) -> float:
         if type==0:
             return float("nan")
@@ -343,7 +348,7 @@ class data_analysis:
         if n == 0:
             min_value = float("nan")
         return min_value
-
+    # Custom max function
     def values_max(self, values, type) -> float:
         if type==0:
             return float("nan")
@@ -359,7 +364,7 @@ class data_analysis:
         if n == 0:
             max_value = float("nan")
         return max_value
-
+    # Custom percentile function
     def percentile(self, values, percentage: int, type) -> float:
         if type==0:
             return float("nan")
@@ -436,4 +441,16 @@ class data_analysis:
     
     def get_data(self):
         return (self.data)
-    
+
+    def get_dataframe(self):
+        columnas = self.get_feature_list()
+        df = pd.DataFrame(self.data, columns=columnas)
+        # Eliminar primera fila
+        df = df.iloc[1:].reset_index(drop=True)
+        df.drop(columns=["Index","First Name","Last Name","Birthday","Best Hand"], inplace=True)
+        return (df)
+
+    def count_type_columns(self):
+        zeros = self.columns_type.count(0)
+        ones = self.columns_type.count(1)
+        return zeros, ones
