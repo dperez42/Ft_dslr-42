@@ -1,7 +1,8 @@
 import sys
 from data_analysis import data_analysis
 from ft_dslr import LogisticRegression
-
+import matplotlib.pyplot as plt
+import sys
 import numpy as np
 import pandas as pd
 
@@ -12,23 +13,41 @@ def main():
         exit(1)
     # Cargo los datos y los separo en Y (classes) y X (features)
     data = data_analysis(sys.argv[1])
-    #data.describe()
     data.clean_nan_data()
-    data.describe()
+    #data.describe()
     
     list_features = [6,7,8,9,10,11,12,13,14,15,16,17,18]
     list_category = 1  
     y_train = data.get_column_by_index(list_category)
     X_train = data.get_columns_by_index_list(list_features)
     print(len(X_train), len(y_train))
-    model = LogisticRegression(learning_rate=0.0005)  
-    # Entreno el Modelo
-    model.fit(X_train, y_train, epochs=1500)
-    model.save_model("model.json")
-    print(model.get_weights())
-    print(model.get_bias())
 
-    exit()
+    plt.figure(figsize=(10, 6))
+    # Entreno el Modelo
+    model = LogisticRegression(learning_rate=0.0005)  
+    model.fit(X_train, y_train, epochs=1000)
+    model.save_model("model.json")
+    plt.plot(
+        range(1, len(model.cost_history) + 1),
+        model.cost_history,
+        #label=f"{cfg['name']} (lr={cfg['lr']})",
+        #color=cfg["color"],
+        linewidth=2,
+    )
+
+    # 4. Configurar el gráfico
+    plt.title(
+        "Comparación de Convergencia: Batch vs Mini-Batch vs SGD",
+        fontsize=14,
+        fontweight="bold",
+    )
+    plt.xlabel("Épocas (Epochs)", fontsize=11)
+    plt.ylabel("Coste (Cross-Entropy Loss)", fontsize=11)
+    plt.legend(fontsize=10, frameon=True)
+    plt.grid(True, linestyle="--", alpha=0.4)
+    plt.tight_layout()
+    plt.show()    
+    sys.exit(0)
 
     # Testing prediction
     #model.load_model("model.json")

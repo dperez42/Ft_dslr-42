@@ -60,11 +60,8 @@ class data_analysis:
                 if (i == 0):
                     self.features_names.append(self.data_raw[i][j])
                     rowlist.append(self.data_raw[i][j])
-                    #print(i, self.data_raw[i][j], self.features_names)
                 # getting values
                 if (i > 0):
-                    #print(f"Elemento en [{i}][{j}]: {self.data_raw[i][j]}")
-                    #print(type(self.data_raw[i][j]))
                     try:
                         rowlist.append(float(self.data_raw[i][j]))
                     except:
@@ -75,12 +72,9 @@ class data_analysis:
                         #sys.exit("Error: ")
             self.data.append(rowlist)
             i = i + 1
-        #print(self.data[1]) 
-        #print(len(self.data))
         print("Read ", num_filas, " rows from ", self.filename)
     
     def clean_nan_data(self):
-        #print(self.data[1])
         clean_data = []
         num_filas = len(self.data)
         num_columnas = len(self.data[1])
@@ -88,29 +82,20 @@ class data_analysis:
         while i < num_filas :
             # getting names
             if (i == 0):
-                #print("ll", self.data[i])
                 clean_data.append(self.data[i])
             else:
                 # getting not nan values in numerical
                 is_nan = False
-                #print(self.columns_type)
                 for j in range(num_columnas): # Recorre los índices de columna (0, 1, 2)
                     # getting names
-                    #print(" check row:", i, " colum", j, " type:",self.columns_type[j])
                     if self.columns_type[j] == 1: # is a numerical feature
                         # check is not nan
                         if math.isnan(self.data[i][j]) == True:
                             is_nan = True                
-                        #print(i, self.data_raw[i][j], self.features_names)
-                #if is_nan:
-                    #print("no insert", i, self.data[i])
                 if is_nan == False:  # si no hay nan añadelo
-                    #print("insert", i, self.data[i])
                     clean_data.append(self.data[i])
             i = i+1
         self.data = clean_data
-        #print(self.data)
-        #print(self.data[1]) 
         print("Cleaned ",num_filas-len(self.data), " of ", num_filas, " rows. Total remain: ", len(self.data))
 
     def set_column_type(self):
@@ -118,7 +103,6 @@ class data_analysis:
         self.columns_type = []
         for j in range(num_columnas): # Recorre los índices de columna (0, 1, 2)
             # getting values
-            #print("Checking :",j, self.data_raw[1][j])
             try:
                 l = float(self.data_raw[1][j])
                 self.columns_type.append(1)
@@ -128,21 +112,12 @@ class data_analysis:
     def get_column(self, mat, nb_col):
         columnlist = []
         num_filas = len(mat)
-        #print(type(mat))
-        #print("num", num_filas)
         i = 1
         while i < num_filas:
-            #print("aa",i, type(i))
             for j in range(self.nb_features): 
                 if (j==nb_col):
                     columnlist.append(mat[i][j])
             i = i +1
-        #print("ll",self.data[1][1])   
-        #print("ll",mat[i-1])       
-        #print("ll",mat[1][0]) 
-
-        #print("ll",mat[1600][18]) 
-        #print(columnlist)
         return columnlist
     
     def print_data(self) :

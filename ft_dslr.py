@@ -93,16 +93,11 @@ class LogisticRegression :
         self.features_names  = X[0] 
         self.features  = X[1:]
         self.num_features = len(X[0])
-        
-        #print(self.num_classes ,self.classes, len(self.classes))
-        #print(self.num_features, self.features)
         print(self.features[0])
+
          # Z-score to normalize feature data
         self.features = self.z_normalize(self.features)
-        print(self.num_classes ,self.classes_names)
-        print(self.num_features, self.features_names)
-        print(self.features[0])
-        #exit()
+        
         # Initializar weights and bias
         self.weights = [[random.uniform(-0.01, 0.01) for _ in range(self.num_features)] 
                         for _ in range(self.num_classes)]
@@ -110,6 +105,7 @@ class LogisticRegression :
         self.cost_history = []
         m = len(self.features)
         step = max(1, epochs // 10)  # Evita ZeroDivisionError si epochs < 10
+        
         # Train model------------------------
         # # Gradient descent: empezamos iteraciones
         for epoch in range(epochs):
@@ -117,13 +113,14 @@ class LogisticRegression :
             # Creo los indices
             indices = list(range(m))
             random.shuffle(indices)     # mezclar índices en cada epoch 
+            # Recorremos el dataset en bloques de tamaño 'batch_size'
             for i in indices:
                 ######### FORWARD PASS ##############################
                 # probilidad = (w1*F1 + w2*F2 +..+ b1) x cada clase -> luego aplica soft para dejarlo [1, 0, ...]
                 probs = self.predict_proba(self.features[i])
                 y_true = self.one_hot_encode(self.classes[i]) # -> [0, 1, ]
                 total_loss += self.cross_entropy_loss(y_true, probs)
-                ########## BACKPROPAGATION ###########################
+                ########## BACKPROPAGATION : actualiza weights and bias ###########################
                 for c in range(self.num_classes):
                     error = probs[c] - y_true[c]
                     for j in range(self.num_features):
@@ -132,8 +129,9 @@ class LogisticRegression :
 
             if (epoch + 1) % step == 0:
                 print(f"Epoch {epoch+1}/{epochs} - Loss: {total_loss/len(self.features):.4f}")
-                self.cost_history.append(total_loss/len(self.features))
+            self.cost_history.append(total_loss/len(self.features))
         self.model_load = True
+        print(self.cost_history)
     
     # Test data
     def test(self, X_test, y_test, output_file="houses.csv"):
@@ -308,7 +306,6 @@ class LogisticRegression :
         self.model_load = True
         return 
         
-    
     # GETTERS
     def get_weights(self):
         return self.weights   
