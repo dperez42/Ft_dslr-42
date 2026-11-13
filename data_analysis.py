@@ -406,21 +406,12 @@ class data_analysis:
     def get_column_by_index(self, nb_col):
         columnlist = []
         num_filas = len(self.data)
-        #print(type(mat))
-        #print(self.nb_features, num_filas)
         i = 0
         while i < num_filas:
-            #print("aa",i, type(i))
             for j in range(self.nb_features): 
                 if (j==nb_col):
                     columnlist.append(self.data[i][j])
             i = i +1
-        #print("ll",self.data[1][1])   
-        #print("ll",mat[i-1])       
-        #print("ll",mat[1][0]) 
-
-        #print("ll",mat[1600][18]) 
-        #print(columnlist)
         return columnlist
     
     def get_columns_by_index_list(self, list_col):

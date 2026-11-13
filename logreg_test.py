@@ -17,10 +17,10 @@ def main():
     list_category = 1  
     y_train = data.get_column_by_index(list_category)
     X_train = data.get_columns_by_index_list(list_features)
-    print(X_train[0])
     model = LogisticRegression()
     model.load_model("model.json")  
     model.test(X_train, y_train)
+    model.compare("houses.csv", "dataset_truth.csv", col_index=1, header= True)
 
 if __name__=="__main__":
     main()

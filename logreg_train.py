@@ -20,14 +20,8 @@ def main():
     list_category = 1  
     y_train = data.get_column_by_index(list_category)
     X_train = data.get_columns_by_index_list(list_features)
-       
-    model = LogisticRegression(learning_rate=0.0005)
-    #print(X_train[0])
-    
-    # Z-score to normalize
-    #X_train = model.z_normalize(X_train)
-    
-    
+    print(len(X_train), len(y_train))
+    model = LogisticRegression(learning_rate=0.0005)  
     # Entreno el Modelo
     model.fit(X_train, y_train, epochs=1500)
     model.save_model("model.json")
