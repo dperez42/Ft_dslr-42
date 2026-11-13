@@ -182,14 +182,9 @@ class LogisticRegression :
                     for j in range(self.num_features)
                 ]             
                 pred_label = self.predict(normalize_row)
-                #print(true_label, "-", pred_label)
-                #if pred_label == true_label:
-                #    correct += 1
                 total += 1
                 # Escribir en CSV (índice empieza en 0)
                 writer.writerow([total, pred_label])
-        #accuracy = (correct / total) * 100 if total > 0 else 0.0
-        #print(f"Accuracy: {accuracy:.2f}% ({correct}/{total} aciertos)")
         print("Testing done.")
         return 
 
