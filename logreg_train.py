@@ -42,7 +42,7 @@ def main():
     if args.batch:
        methods_list.append(("BATCH", "BGD", muestra, args.lr))
     if args.mini_batch:
-       methods_list.append((f"MINI-BATCH ({args.batch_size})", "MGD", args.batch_size, args.lr))
+       methods_list.append((f"MINI-BATCH({args.batch_size})", "MGD", args.batch_size, args.lr))
     if args.sgd:
        methods_list.append(("STOCHASTIC", "SGD", 1, args.lr))
 
@@ -53,6 +53,7 @@ def main():
     
     plt.figure(figsize=(10, 6))
     main_title =""
+    file_title = ""
     for name, method, batch, learning_rate in methods_list:
         print(f"\n\033[1;36m[INFO]\033[0m Ejecutando método: {name} {method} {batch} {learning_rate}")
         # Entreno el Modelo
@@ -68,9 +69,12 @@ def main():
             label=f"{name}",
             linewidth=2,
         )
-        main_title += name + "-"
+        main_title += name + "vs"
+        file_title += method + "vs"
 
     # Configurar el gráfico
+    main_title = main_title[0:-2]+" lr:"+ str(learning_rate) 
+    file_title = file_title[0:-2]+"_"+str(learning_rate) 
     plt.title(
         "Comparación de Convergencia:" + main_title,
         fontsize=14,
@@ -81,7 +85,9 @@ def main():
     plt.legend(fontsize=10, frameon=True)
     plt.grid(True, linestyle="--", alpha=0.4)
     plt.tight_layout()
+    plt.savefig("images/"+file_title+".png", dpi=300)
     plt.show()    
+    
     sys.exit(0)
 
 if __name__=="__main__":

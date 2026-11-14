@@ -84,7 +84,7 @@ class LogisticRegression :
     
     # Optimizes weights and bias by minimizing the cost function
     def fit(self, X, y, epochs=1000, batch_size=1):
-        print(f"\n\033[1;36m[INFO]\033[0m Starting trainning.")
+        print(f"\n\033[1;36m[INFO]\033[0m Starting training.")
         # Init variables Ordenamos las clases para garantizar comsistencia --------------------
         # Clases
         self.classes_names = sorted(list(set(y[1:])))
@@ -102,36 +102,48 @@ class LogisticRegression :
         self.weights = [[random.uniform(-0.01, 0.01) for _ in range(self.num_features)] 
                         for _ in range(self.num_classes)]
         self.bias = [0.0 for _ in range(self.num_classes)]
+        
         self.cost_history = []
         m = len(self.features)
         step = max(1, epochs // 10)  # Evita ZeroDivisionError si epochs < 10
         
-        # Train model------------------------
+        # Train model en batchs------------------------
         # # Gradient descent: empezamos iteraciones
         for epoch in range(epochs):
-            total_loss = 0.0     # inicializa loss en cada epoch           
+            total_loss = 0.0  
             # Creo los indices
             indices = list(range(m))
             random.shuffle(indices)     # mezclar índices en cada epoch 
             # Recorremos el dataset en bloques de tamaño 'batch_size'
-            for i in indices:
-                ######### FORWARD PASS ##############################
-                # probilidad = (w1*F1 + w2*F2 +..+ b1) x cada clase -> luego aplica soft para dejarlo [1, 0, ...]
-                probs = self.predict_proba(self.features[i])
-                y_true = self.one_hot_encode(self.classes[i]) # -> [0, 1, ]
-                total_loss += self.cross_entropy_loss(y_true, probs)
+            for start in range(0, m, batch_size):
+                batch_indices = indices[start : start + batch_size]
+                current_batch_size = len(batch_indices) 
+                # Inicio los acumuladores de gradientes a cero para este batch
+                dw = [[0.0] * self.num_features for _ in range(self.num_classes)]
+                db = [0.0] * self.num_classes
+                # inicio calculo para un batch
+                for i in batch_indices:
+                    ######### FORWARD PASS ##############################
+                    # probilidad = (w1*F1 + w2*F2 +..+ b1) x cada clase -> luego aplica soft para dejarlo [1, 0, ...]
+                    probs = self.predict_proba(self.features[i])
+                    y_true = self.one_hot_encode(self.classes[i]) # -> [0, 1, ]
+                    total_loss += self.cross_entropy_loss(y_true, probs)
+                    for c in range(self.num_classes):
+                        error = probs[c] - y_true[c]
+                        for j in range(self.num_features):
+                            dw[c][j] += error * self.features[i][j]
+                        db[c] += error
                 ########## BACKPROPAGATION : actualiza weights and bias ###########################
                 for c in range(self.num_classes):
-                    error = probs[c] - y_true[c]
                     for j in range(self.num_features):
-                        self.weights[c][j] -= self.lr * error * self.features[i][j]
-                    self.bias[c] -= self.lr * error
-
+                        self.weights[c][j] -= self.lr  * (dw[c][j] / current_batch_size)
+                    self.bias[c] -= self.lr * (db[c] / current_batch_size)
+            avg_loss = total_loss / m
             if (epoch + 1) % step == 0:
-                print(f"Epoch {epoch+1}/{epochs} - Loss: {total_loss/len(self.features):.4f}")
-            self.cost_history.append(total_loss/len(self.features))
+                print(f"Epoch {epoch+1}/{epochs} - Loss: {avg_loss:.4f}")
+            self.cost_history.append(avg_loss)
         self.model_load = True
-        print(f"\n\033[1;36m[INFO]\033[0m Finished trainning.")
+        print(f"\n\033[1;36m[INFO]\033[0m Finished training.")
     
     # Test data
     def test(self, X_test, y_test, output_file="houses.csv"):
