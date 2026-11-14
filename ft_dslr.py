@@ -55,7 +55,7 @@ class LogisticRegression :
         ]
         self.means = means
         self.stds = stds
-        print(" Data has been normalized")
+        print(f"\n\033[1;36m[INFO]\033[0m Data has been normalized.")
         return normalized_data
     
     # Convert class index to one-hot vector.
@@ -83,7 +83,8 @@ class LogisticRegression :
         return [ev / total for ev in exp_vals]
     
     # Optimizes weights and bias by minimizing the cost function
-    def fit(self, X, y, epochs=1000):
+    def fit(self, X, y, epochs=1000, batch_size=1):
+        print(f"\n\033[1;36m[INFO]\033[0m Starting trainning.")
         # Init variables Ordenamos las clases para garantizar comsistencia --------------------
         # Clases
         self.classes_names = sorted(list(set(y[1:])))
@@ -93,7 +94,6 @@ class LogisticRegression :
         self.features_names  = X[0] 
         self.features  = X[1:]
         self.num_features = len(X[0])
-        print(self.features[0])
 
          # Z-score to normalize feature data
         self.features = self.z_normalize(self.features)
@@ -131,7 +131,7 @@ class LogisticRegression :
                 print(f"Epoch {epoch+1}/{epochs} - Loss: {total_loss/len(self.features):.4f}")
             self.cost_history.append(total_loss/len(self.features))
         self.model_load = True
-        print(self.cost_history)
+        print(f"\n\033[1;36m[INFO]\033[0m Finished trainning.")
     
     # Test data
     def test(self, X_test, y_test, output_file="houses.csv"):
@@ -289,6 +289,7 @@ class LogisticRegression :
         }
         with open(file_path, "w") as f:
             json.dump(model_data, f, indent=4)
+        print(f"\n\033[1;36m[INFO]\033[0m Model saved in {file_path}.")
 
     # Load Model
     def load_model(self,file_path):
@@ -304,6 +305,7 @@ class LogisticRegression :
         self.bias = model_data["bias"]
         self.lr = model_data["learning_rate"]
         self.model_load = True
+        print(f"\n\033[1;36m[INFO]\033[0m Model loaded from {file_path}.")
         return 
         
     # GETTERS

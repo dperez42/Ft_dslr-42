@@ -12,7 +12,6 @@ Qué cambia exactamente?
 • Acumular dw y db: Sumas los errores de todo el lote y, al terminar el lote, actualizas los pesos dividiendo por el tamaño real del lote (current_batch_size).
 
 
-
     def fit(self, X, y, epochs=1000, batch_size=32):
       # 1. Separar encabezados y ordenar las 4 casas únicas
       y_data = y[1:]

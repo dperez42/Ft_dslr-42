@@ -72,8 +72,8 @@ class data_analysis:
                         #sys.exit("Error: ")
             self.data.append(rowlist)
             i = i + 1
-        print("Read ", num_filas, " rows from ", self.filename)
-    
+        print(f"\n\033[1;36m[INFO]\033[0m Read {num_filas} rows de {self.filename}")
+        
     def clean_nan_data(self):
         clean_data = []
         num_filas = len(self.data)
@@ -96,7 +96,7 @@ class data_analysis:
                     clean_data.append(self.data[i])
             i = i+1
         self.data = clean_data
-        print("Cleaned ",num_filas-len(self.data), " of ", num_filas, " rows. Total remain: ", len(self.data))
+        print(f"\n\033[1;36m[INFO]\033[0m Cleaned {num_filas-len(self.data)} of {num_filas} rows. Total remain: {len(self.data)}")
 
     def set_column_type(self):
         num_columnas = len(self.data_raw[0])
