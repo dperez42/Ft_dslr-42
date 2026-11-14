@@ -1,13 +1,23 @@
 import sys
 from data_analysis import data_analysis
 from data_visualization import data_visualization
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+      description=(
+          "Muestra los histogramas del dataset"
+      ),
+      usage="python histogram.py <dataset.csv>",
+    )
+    parser.add_argument(
+        "dataset", type=str, help="Ruta al archivo CSV del dataset"
+    )
+    return parser.parse_args()
 
 def main():
-    args = sys.argv[1:]
-    if len(args) != 1:
-        print("\033[33m[WARNING]\033[0m Usage: python histogram.py <dataset.csv>")
-        exit(1)
-    data = data_analysis(sys.argv[1])
+    args = parse_args()
+    data = data_analysis(args.dataset)
     df = data.get_dataframe()
     plot = data_visualization("Distribución de asignaturas por Hogwarts House")
     plot.histogram(df)

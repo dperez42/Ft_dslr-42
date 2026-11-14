@@ -1,13 +1,24 @@
 import sys
 from data_analysis import data_analysis
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+      description=(
+          "Calcula estadísticas descriptivas de un dataset CSV (estilo"
+          " pandas.describe)."
+      ),
+      usage="python describe.py <dataset.csv>",
+    )
+    parser.add_argument(
+        "dataset", type=str, help="Ruta al archivo CSV del dataset"
+    )
+    return parser.parse_args()
 
 def main():
-    args = sys.argv[1:]
-    if len(args) != 1:
-        print("\033[33m[WARNING]\033[0m Usage: python describe.py <dataset.csv>")
-        sys.exit(1)
+    args = parse_args()
     try:
-        load_data = data_analysis(sys.argv[1])
+        load_data = data_analysis(args.dataset)
         load_data.describe()
         text_col, num_col = load_data.count_type_columns()
         print(f"Columnas Texto: {text_col}, Numéricas: {num_col}")
