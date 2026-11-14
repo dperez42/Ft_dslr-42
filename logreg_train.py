@@ -2,9 +2,6 @@ import sys
 from data_analysis import data_analysis
 from ft_dslr import LogisticRegression
 import matplotlib.pyplot as plt
-import sys
-import numpy as np
-import pandas as pd
 import argparse
 
 def parse_args():
@@ -29,10 +26,9 @@ def parse_args():
 
 def main():
     args = parse_args()
-    print(args)
     
     # Cargo los datos y los separo en Y (classes) y X (features)
-    data = data_analysis(sys.argv[1])
+    data = data_analysis(args.dataset)
     data.clean_nan_data()
     #data.describe()
     
@@ -63,6 +59,8 @@ def main():
         if args.output:
             nombre_fichero = "model_" + method +".json"
             model.save_model(nombre_fichero)
+        # Always save a model
+        model.save_model("model.json")
         plt.plot(
             range(1, len(model.cost_history) + 1),
             model.cost_history,

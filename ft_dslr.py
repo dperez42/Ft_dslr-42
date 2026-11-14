@@ -195,7 +195,8 @@ class LogisticRegression :
                 total += 1
                 # Escribir en CSV (índice empieza en 0)
                 writer.writerow([total, pred_label])
-        print("Testing done.")
+        print(f"\n\033[1;36m[INFO]\033[0m Testing done.")
+        print(f"\n\033[1;36m[INFO]\033[0m Results in file: {output_file}.")
         return 
 
     def compare(self, file1, file2, col_index=1, header=True):
